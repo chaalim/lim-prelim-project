@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add item on your lists</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #f44336;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #logoutBtn {
+            padding: 5px 10px;
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        nav a {
+            margin: 0 15px;
+            color: #f44336;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="file"],
+        input[type="number"],
+        select {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="button"] {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+            color: #fff;
+        }
+
+        /* Existing CSS */
+        #addNeed {
+            background-color: #f44336;
+        }
+
+        #addNeed:hover {
+            background-color: #c62828;
+        }
+
+        #addHave {
+            background-color: #add8e6;
+        }
+
+        #addHave:hover {
+            background-color: #87ceeb;
+        }
+
+        /* Updated Save List Button */
+        #saveListBtn {
+            background-color: yellow;
+            /* Set the button color */
+            color: #000;
+            /* Text color */
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #saveListBtn:hover {
+            background-color: #ffd700;
+            /* Darker shade on hover */
+        }
+
+        }
+
+
+        h2 {
+            color: #333;
+            margin-top: 30px;
+            font-size: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        ul li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f9f9f9;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        ul li img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        ul li a {
+            color: #dc3545;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        ul li a:hover {
+            color: #bd2130;
+        }
+
+        footer {
+            background-color: #f44336;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            text-align: center;
+        }
+
+        .modal button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h2>Grocery List App</h2>
+        <button id="logoutBtn">Log Out</button>
+    </header>
+
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="fruits.html">Fruits</a>
+        <a href="vegetables.html">Vegetables</a>
+        <a href="dairy.html">Dairy</a>
+        <a href="meat.html">Meat</a>
+        <a href="grains.html">Grains</a>
+        <a href="summary.html">Cart Summary</a>
+        <a href="list.html">Saved Lists</a>
+
+    </nav>
+
+    <main>
+        <h1>My Grocery List</h1>
+
+        <form id="addItemForm" enctype="multipart/form-data">
+            <label for="itemName">Product Name:</label>
+            <input type="text" id="itemName" name="item" placeholder="Enter product name" required>
+
+            <label for="brand">Brand:</label>
+            <input type="text" id="brand" name="brand" placeholder="Enter brand name" required>
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" placeholder="Enter price" required min="0" step="0.01">
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required min="1">
+
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" name="weight" placeholder="Enter weight" required min="0" step="0.1">
+
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="">Select category</option>
+                <option value="fruits">Fruits</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="dairy">Dairy</option>
+                <option value="meat">Meat</option>
+                <option value="grains">Grains</option>
+            </select>
+
+            <label for="itemImage">Product Image:</label>
+            <input type="file" id="itemImage" name="itemImage" accept="image/*">
+
+            <input id="addNeed" type="button" value="Add">
+
+            <input id="saveListBtn" type="button" value="Save List">
+        </form>
+
+        <h2>Items I need to Buy:</h2>
+        <ul class='list' id="needList"></ul>
+
+        <h2>Items I have on my Cart:</h2>
+        <ul class='list' id="haveList"></ul>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 My Grocery List App</p>
+    </footer>
+
+    <!-- Save List Modal -->
+    <div id="saveListModal" class="modal">
+        <div class="modal-content">
+            <h2>Save Your List</h2>
+            <label for="listName">Enter list name:</label>
+            <input type="text" id="listName" placeholder="List Name" required>
+            <button id="confirmSaveBtn">Save List</button>
+            <button onclick="document.getElementById('saveListModal').style.display='none'">Cancel</button>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let items = JSON.parse(localStorage.getItem('groceryItems')) || [];
+
+            function saveToLocalStorage() {
+                localStorage.setItem('groceryItems', JSON.stringify(items));
+            }
+
+            function addItem(listId) {
+                const itemName = $('#itemName').val();
+                const brand = $('#brand').val();
+                const price = $('#price').val();
+                const quantity = $('#quantity').val();
+                const weight = $('#weight').val();
+                const category = $('#category').val();
+                const itemImage = $('#itemImage')[0].files[0];
+
+                if (!itemName || !brand || !price || !quantity || !weight || !category) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
+
+                const item = {
+                    name: itemName,
+                    brand: brand,
+                    price: parseFloat(price),
+                    quantity: parseInt(quantity),
+                    weight: parseFloat(weight),
+                    category: category,
+                    image: itemImage ? URL.createObjectURL(itemImage) : null
+                };
+
+                items.push({item, listId});
+                saveToLocalStorage();
+                renderList('#needList');
+
+                $('#itemName').val('');
+                $('#brand').val('');
+                $('#price').val('');
+                $('#quantity').val('');
+                $('#weight').val('');
+                $('#category').val('');
+                $('#itemImage').val('');
+            }
+
+            function renderList(listId) {
+                $(listId).empty();
+
+                items.forEach((entry, index) => {
+                    if (entry.listId === listId) {
+                        const item = entry.item;
+                        const listItem = $('<li></li>');
+
+                        if (listId === '#needList') {
+                            const checkbox = $('<input type="checkbox">').on('change', function () {
+                                if (this.checked) {
+                                    moveToHave(index);
+                                }
+                            });
+                            const checkboxContainer = $('<div class="checkbox-container"></div>').append(checkbox);
+                            listItem.append(checkboxContainer);
+                        }
+
+                        const itemLabel = $('<span></span>').html(`
+                            <strong>${item.name}</strong><br>
+                            Brand: ${item.brand}<br>
+                            Price: ₱${item.price.toFixed(2)}<br>
+                            Quantity: ${item.quantity}<br>
+                            Weight: ${item.weight} kg<br>
+                            Category: ${item.category}
+                        `);
+
+                        const editButton = $('<button>Edit</button>').on('click', function () {
+                            $('#itemName').val(item.name);
+                            $('#brand').val(item.brand);
+                            $('#price').val(item.price);
+                            $('#quantity').val(item.quantity);
+                            $('#weight').val(item.weight);
+                            $('#category').val(item.category);
+                            $('#itemImage').val('');
+                            items.splice(index, 1);
+                            renderList('#needList');
+                            saveToLocalStorage();
+                        });
+
+                        const deleteButton = $('<button>Delete</button>').on('click', function () {
+                            items.splice(index, 1);
+                            renderList(listId);
+                            saveToLocalStorage();
+                        });
+
+                        const img = $('<img>').attr('src', item.image);
+
+                        listItem.append(img).append(itemLabel).append(editButton).append(deleteButton);
+                        $(listId).append(listItem);
+                    }
+                });
+            }
+
+            function moveToHave(index) {
+                const entry = items.splice(index, 1)[0];
+                entry.listId = '#haveList';
+                items.push(entry);
+                saveToLocalStorage();
+                renderList('#needList');
+                renderList('#haveList');
+            }
+
+            $('#addNeed').on('click', function () {
+                addItem('#needList');
+            });
+
+
+            $('#saveListBtn').on('click', function () {
+                $('#saveListModal').css('display', 'block');
+            });
+
+            $('#confirmSaveBtn').on('click', function () {
+                const listName = $('#listName').val().trim();
+                if (listName) {
+                    const savedLists = JSON.parse(localStorage.getItem('savedLists')) || {};
+                    savedLists[listName] = items;
+                    localStorage.setItem('savedLists', JSON.stringify(savedLists));
+                    alert('List saved successfully!');
+                    $('#listName').val('');
+                    $('#saveListModal').css('display', 'none');
+                } else {
+                    alert('Please enter a list name.');
+                }
+            });
+
+            $('#logoutBtn').on('click', function () {
+                window.location.href = 'index.html';
+            });
+
+            renderList('#needList');
+            renderList('#haveList');
+        });
+    </script>
+
+</body>
+
+</html>

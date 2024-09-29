@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Summary</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #f44336;
+            display: inline-block; /* To allow button positioning */
+        }
+
+        .button-container {
+            float: right; /* Position buttons to the right */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f44336;
+            color: white;
+        }
+
+        img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        button {
+            background-color: #f44336;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-left: 10px; /* Space between buttons */
+        }
+    </style>
+</head>
+<body>
+    <h1>Items in My Cart</h1>
+
+    <div class="button-container">
+        <button id="sortByPrice">Sort by Price</button>
+        <button id="sortByName">Sort by Name</button>
+        <button id="sortByDate">Sort by Date</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Item</th>
+                <th>Brand</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody id="cartSummary"></tbody>
+    </table>
+
+    <p class="total">Grand Total: ₱<span id="grandTotal">0.00</span></p>
+
+    <button id="backToApp">Back to Grocery List</button>
+
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let items = JSON.parse(localStorage.getItem('groceryItems')) || []; 
+            let totalPrice = 0;
+            const cartSummary = $('#cartSummary');
+            const grandTotal = $('#grandTotal');
+
+            function renderCart(items) {
+                cartSummary.empty(); // Clear previous rows
+                totalPrice = 0; // Reset total price
+
+                items.forEach(entry => {
+                    if (entry.listId === '#haveList') {
+                        const item = entry.item;
+                        const totalItemPrice = item.price * item.quantity;
+                        totalPrice += totalItemPrice;
+
+                        const row = $('<tr></tr>');
+                        row.append(`<td><img src="${item.image}" alt="${item.name}"></td>`);
+                        row.append(`<td>${item.name}</td>`);
+                        row.append(`<td>${item.brand}</td>`);
+                        row.append(`<td>₱${item.price.toFixed(2)}</td>`);
+                        row.append(`<td>${item.quantity}</td>`);
+                        row.append(`<td>₱${totalItemPrice.toFixed(2)}</td>`);
+                        cartSummary.append(row);
+                    }
+                });
+
+                grandTotal.text(totalPrice.toFixed(2));
+            }
+
+            $('#sortByPrice').on('click', function () {
+                const sortedItems = [...items].sort((a, b) => a.item.price - b.item.price);
+                renderCart(sortedItems);
+            });
+
+            $('#sortByName').on('click', function () {
+                const sortedItems = [...items].sort((a, b) => a.item.name.localeCompare(b.item.name));
+                renderCart(sortedItems);
+            });
+
+            $('#sortByDate').on('click', function () {
+                const sortedItems = [...items].sort((a, b) => new Date(a.dateAdded) - new Date(b.dateAdded));
+                renderCart(sortedItems);
+            });
+
+            renderCart(items);
+
+            $('#backToApp').on('click', function () {
+                window.location.href = 'home.html';
+            });
+        });
+    </script>
+</body>
+</html>
